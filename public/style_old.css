@@ -1,0 +1,109 @@
+/* Style for the container */
+.container {
+    max-width: 600px;
+    margin: 50px auto;
+    padding: 20px;
+    background-color: #f9f9f9;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+}
+
+/* Style for the form */
+.form {
+    display: flex;
+    flex-direction: column;
+}
+
+/* Style for the form header */
+.form-header {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+/* Style for the form title */
+.form-title {
+    font-size: 24px;
+    color: #333;
+}
+
+/* Style for the logo */
+.logo {
+    max-width: 100px;
+    margin-bottom: 10px;
+}
+
+/* Style for form groups */
+.form-group {
+    margin-bottom: 15px;
+}
+
+/* Style for labels */
+.form-group label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+}
+
+/* Style for input fields */
+.form-group input[type="text"] {
+    width: calc(100% - 110px);
+    padding: 10px;
+    margin-right: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+    font-size: 14px;
+}
+
+/* Style for buttons */
+.btn {
+    padding: 10px 20px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+/* Style for submit button */
+.btn-submit {
+    align-self: flex-end;
+    background-color: #28a745;
+}
+
+/* Hover effect for buttons */
+.btn:hover {
+    background-color: #0056b3;
+}
+
+/* Hover effect for submit button */
+.btn-submit:hover {
+    background-color: #218838;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .container {
+        margin: 20px;
+        padding: 15px;
+    }
+
+    .form-group input[type="text"] {
+        width: 100%;
+        margin-bottom: 10px;
+    }
+}
+
+/* Transitions for inputs and buttons */
+.form-group input[type="text"],
+.btn,
+.btn-submit {
+    transition: all 0.3s ease;
+}
+
+/* Focus effect for input fields */
+.form-group input[type="text"]:focus {
+    border-color: #007bff;
+    box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+}

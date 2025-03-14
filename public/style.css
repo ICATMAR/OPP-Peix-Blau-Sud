@@ -1,0 +1,131 @@
+/* Style for the container */
+.container {
+    max-width: 600px;
+    margin: 50px auto;
+    padding: 20px;
+    background-color: #f9f9f9;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+}
+
+/* Style for the form */
+.form {
+    display: flex;
+    flex-direction: column;
+}
+
+/* Style for the form header */
+.form-header {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+/* Style for the form title */
+.form-title {
+    font-size: 24px;
+    color: #333;
+}
+
+/* Style for the logo */
+.logo {
+    max-width: 100px;
+    margin-bottom: 10px;
+}
+
+/* Style for form groups */
+.form-group {
+    margin-bottom: 15px;
+}
+
+/* Style for labels */
+.form-group label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+}
+
+/* Style for input fields */
+.form-group input[type="text"],
+.form-group select {
+    width: calc(100% - 110px);
+    padding: 10px;
+    margin-right: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+    font-size: 14px;
+}
+
+/* Style for buttons */
+.btn,
+.btn-toggle {
+    padding: 10px 20px;
+    background-color: #52b5d9;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    margin-bottom: 10px; /* Add space between buttons */
+}
+
+/* Style for submit button */
+.btn-submit {
+    padding: 10px 20px;
+    align-self: flex-end;
+    background-color: #1478a7;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+/* Hover effect for buttons */
+.btn:hover {
+    background-color: #1478a7;
+}
+
+/* Hover effect for submit button */
+.btn-submit:hover {
+    background-color: #0f3063;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .container {
+        margin: 20px;
+        padding: 15px;
+    }
+
+    .form-group input[type="text"],
+    .form-group select {
+        width: 100%;
+        margin-bottom: 10px;
+    }
+}
+
+/* Transitions for inputs and buttons */
+.form-group input[type="text"],
+.form-group select,
+.btn,
+.btn-submit {
+    transition: all 0.3s ease;
+}
+
+/* Focus effect for input fields */
+.form-group input[type="text"]:focus,
+.form-group select:focus {
+    border-color: #007bff;
+    box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+}
+
+/* Initial style for collapsible sections */
+.collapsible-section {
+    display: none;
+}
+
+/* Add space before the image upload field */
+#imageUpload {
+    margin-top: 20px; /* Add space above the image uploader */
+}

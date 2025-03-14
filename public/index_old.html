@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OPP Peix Blau Tarragona</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <form id="dataForm" class="form" action="/submit" method="post">
+            <div class="form-header">
+                <img src="icatmar_logo.png" alt="Logo" class="logo">
+                <h1 class="form-title">OPP Peix Blau Tarragona</h1>
+            </div>
+            
+            <div class="form-group">
+                <label for="location">Posició:</label>
+                <input type="text" id="location" name="location" readonly>
+                <button type="button" class="btn" onclick="getLocation()">Obtenir posició</button>
+            </div>
+
+            <div class="form-group">
+                <label for="datetime">Hora:</label>
+                <input type="text" id="datetime" name="datetime" readonly>
+                <button type="button" class="btn" onclick="getDateTime()">Obtenir hora</button>
+            </div>
+
+            <div class="form-group">
+                <label for="question1">Especie:</label>
+                <input type="text" id="question1" name="question1">
+            </div>
+
+            <div class="form-group">
+                <label for="question2">Kg:</label>
+                <input type="text" id="question2" name="question2">
+            </div>
+
+            <div class="form-group">
+                <label for="dropdown">Motiu de no pesca:</label>
+                <select id="dropdown" name="dropdown">
+                    <option value="option1">Peix petit</option>
+                    <option value="option2">No té interès econòmic</option>
+                    <option value="option3">Prohibició de pesca</option>
+                    <option value="option4">Peix no concentrat</option>
+                    <option value="option5">Solta</option>
+                    <option value="option6">Altres</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="question3">Especifica altres:</label>
+                <input type="text" id="question3" name="question3">
+            </div>
+
+            <button type="submit" class="btn">Envia</button>
+        </form>
+    </div>
+    <script>
+        // JavaScript for getting location
+        function getLocation() {
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(function(position) {
+                    document.getElementById('location').value = 
+                        position.coords.latitude + ', ' + position.coords.longitude;
+                });
+            } else {
+                alert("Geolocation is not supported by this browser.");
+            }
+        }
+
+        // JavaScript for getting current date and time
+        function getDateTime() {
+            const now = new Date();
+            document.getElementById('datetime').value = now.toISOString();
+        }
+    </script>
+</body>
+</html>

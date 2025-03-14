@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OPP Peix Blau Tarragona</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <form id="dataForm" class="form">
+            <div class="form-header">
+                <img src="icatmar_logo.png" alt="Logo" class="logo">
+                <h1 class="form-title">OPP Peix Blau Tarragona</h1>
+            </div>
+
+            <button type="button" class="btn-toggle" onclick="toggleSection('collapsibleSection1')">PESCA</button>
+
+            <div id="collapsibleSection1" class="collapsible-section">
+                <div class="form-group">
+                    <label for="location1">Posició:</label>
+                    <input type="text" id="location1" name="location1" readonly>
+                    <button type="button" class="btn" onclick="getLocation('location1')">Obtenir posició</button>
+                </div>
+
+                <div class="form-group">
+                    <label for="datetime1">Hora:</label>
+                    <input type="text" id="datetime1" name="datetime1" readonly>
+                    <button type="button" class="btn" onclick="getDateTime('datetime1')">Obtenir hora</button>
+                </div>
+
+                <div class="form-group">
+                    <label for="question1">Especie:</label>
+                    <select id="dropdown" name="dropdown">
+                        <option value="option1">Sardina</option>
+                        <option value="option2">Seitó</option>
+                        <option value="option3">Alatxa</option>                        
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="question2">Kg:</label>
+                    <input type="text" id="question2" name="question2">
+                </div>
+                
+                <div class="form-group">
+                    <label for="question2">Calibre:</label>
+                    <input type="text" id="question3" name="question3">
+                </div>
+                
+            </div>
+
+            <button type="button" class="btn-toggle" onclick="toggleSection('collapsibleSection2')">NO PESCA</button>
+
+            <div id="collapsibleSection2" class="collapsible-section">
+                <div class="form-group">
+                    <label for="location2">Posició:</label>
+                    <input type="text" id="location2" name="location2" readonly>
+                    <button type="button" class="btn" onclick="getLocation('location2')">Obtenir posició</button>
+                </div>
+
+                <div class="form-group">
+                    <label for="datetime2">Hora:</label>
+                    <input type="text" id="datetime2" name="datetime2" readonly>
+                    <button type="button" class="btn" onclick="getDateTime('datetime2')">Obtenir hora</button>
+                </div>
+
+                <div class="form-group">
+                    <label for="question1">Especie:</label>
+                    <select id="dropdown" name="dropdown">
+                        <option value="option1">Sardina</option>
+                        <option value="option2">Seitó</option>
+                        <option value="option3">Alatxa</option>                        
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="question2">Kg:</label>
+                    <input type="text" id="question2" name="question2">
+                </div>
+
+                <div class="form-group">
+                    <label for="dropdown">Motiu de no pesca:</label>
+                    <select id="dropdown" name="dropdown">
+                        <option value="option1">Peix petit</option>
+                        <option value="option2">No té interès econòmic</option>
+                        <option value="option3">Prohibició de pesca</option>
+                        <option value="option4">Peix no concentrat</option>
+                        <option value="option5">Solta</option>
+                        <option value="option6">Altres</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="imageUpload">Imatge ecosonda:</label>
+                    <input type="file" id="imageUpload" name="imageUpload" accept="image/*">
+                </div>
+            </div>
+
+            <button type="submit" class="btn-submit">Envia</button>
+        </form>
+    </div>
+
+    <script>
+        // JavaScript for getting location
+        function getLocation(sectionId) {
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(function(position) {
+                    document.getElementById(sectionId).value = 
+                        position.coords.latitude + ', ' + position.coords.longitude;
+                });
+            } else {
+                alert("Geolocation is not supported by this browser.");
+            }
+        }
+
+        // JavaScript for getting current date and time
+        function getDateTime(sectionId) {
+            const now = new Date();
+            document.getElementById(sectionId).value = now.toISOString();
+        }
+
+        // JavaScript for getting current date and time in GMT+2
+        function getDateTime(sectionId) {
+            const now = new Date();
+            const options = {
+                timeZone: 'Etc/GMT-2',
+                year: 'numeric',
+                month: '2-digit',
+                day: '2-digit',
+                hour: '2-digit',
+                minute: '2-digit',
+                second: '2-digit',
+                hour12: false,
+            };
+            const dateTimeFormat = new Intl.DateTimeFormat('ca-ES', options);
+            const [{ value: day },,{ value: month },,{ value: year },,{ value: hour },,{ value: minute },,{ value: second }] = dateTimeFormat.formatToParts(now);
+            const formattedDateTime = `${year}-${month}-${day}T${hour}:${minute}:${second}`;
+            document.getElementById(sectionId).value = formattedDateTime;
+        }
+
+        // JavaScript for toggling the collapsible sections
+        function toggleSection(sectionId) {
+            const section = document.getElementById(sectionId);
+            section.style.display = section.style.display === 'none' ? 'block' : 'none';
+        }
+
+        // Initialize the form with sections collapsed
+        document.addEventListener("DOMContentLoaded", function() {
+            document.getElementById('collapsibleSection1').style.display = 'none';
+            document.getElementById('collapsibleSection2').style.display = 'none';
+        });
+    </script>
+</body>
+</html>
