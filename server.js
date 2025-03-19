@@ -21,7 +21,7 @@ const pool = new Pool({
 app.use(bodyParser.urlencoded({ extended: true }));
 
 // Servir archivos estáticos
-app.use(express.static(path.join(__dirname, 'public')));
+app.use(express.static(path.join(__dirname, '/')));
 
 // Endpoint para manejar el envío del formulario
 app.post('/submit', async (req, res) => {
