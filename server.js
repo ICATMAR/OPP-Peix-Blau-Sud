@@ -1,62 +1,80 @@
-/*
-Install Node.js from nodejs.org.
-Create a new directory for your project and navigate to it in your terminal.
-Run npm init -y to create a package.json file.
-Install dependencies:
-    npm install express.
-    npm install csv-writer
-    npm install body-parser
-Run the server
-    node server.js
-Open your browser.
-Go to http://localhost:3000.
-*/
-
 const express = require('express');
 const bodyParser = require('body-parser');
 const path = require('path');
-const fs = require('fs');
-const createCsvWriter = require('csv-writer').createObjectCsvWriter;
+const { Pool } = require('pg');
 
 const app = express();
 const port = 3000;
 
-// Middleware to parse form data
-app.use(bodyParser.urlencoded({ extended: true }));
+const moment = require('moment');
 
-// Serve static files (your HTML form)
-app.use(express.static(path.join(__dirname, 'public')));
-
-// Set up CSV writer
-const csvFilePath = path.join(__dirname, 'form-data.csv');
-const csvWriter = createCsvWriter({
-    path: csvFilePath,
-    header: [
-        { id: 'location', title: 'Location' },
-        { id: 'datetime', title: 'Date and Time' },
-        { id: 'question1', title: 'Question 1' },
-        { id: 'question2', title: 'Question 2' },
-    ],
-    append: true, // Append new rows to the CSV file
+// Configuración de la conexión a PostgreSQL
+const pool = new Pool({
+    user: 'postgres', // Cambia esto por tu usuario de PostgreSQL
+    host: 'localhost',
+    database: 'OPP_Form', // Cambia esto por el nombre de tu base de datos
+    password: 'postgres', // Cambia esto por tu contraseña
+    port: 5432,
 });
 
-// Handle form submission
-app.post('/submit', (req, res) => {
+// Middleware para analizar datos del formulario
+app.use(bodyParser.urlencoded({ extended: true }));
+
+// Servir archivos estáticos
+app.use(express.static(path.join(__dirname, 'public')));
+
+// Endpoint para manejar el envío del formulario
+app.post('/submit', async (req, res) => {
     const formData = req.body;
     console.log(formData);
-    // Save the form data to a database or file here
-    // Write form data to CSV
-    csvWriter.writeRecords([formData])
-        .then(() => {
-            console.log('Form data saved to CSV.');
-            res.send('Form data received and saved.');
-        })
-        .catch(error => {
-            console.error('Error writing to CSV:', error);
-            res.status(500).send('Error saving form data.');
-        });
+
+    // Convertir initial_datetime al formato compatible con PostgreSQL
+    const initialDatetime = moment(formData.initial_datetime, 'DD/MM/YYYY, HH:mm:ss').format('YYYY-MM-DD HH:mm:ss');
+
+    // Insertar los datos en la base de datos
+    const query = `
+        INSERT INTO opp_forms (
+            boat_name, initial_position, initial_datetime, fishing, no_fishing, tuna, position, timestamp, specie, kg, no_fishing_reason, caliber, num_individuals, interaccion
+        ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14)
+    `;
+    const values = [
+        formData.boat_name,
+        formData.initial_position,
+        initialDatetime,
+        !!formData.fishing, // Fishing
+        !!formData.no_fishing, // NoFishing
+        !!formData.tuna, // Tuna
+        formData.position,
+        formData.timestamp,
+        formData.specie, // Specie
+        formData.kg || null, // KG
+        formData.no_fishing_reason, // NoFishingReason
+        formData.caliber, // Caliber
+        formData.num_individuals || null, // NumIndividuals
+        formData.interaccion, // Interaccion
+    ];
+
+    try {
+        await pool.query(query, values);
+        console.log('Datos insertados correctamente en la base de datos.');
+        res.send('Formulario enviado correctamente.');
+    } catch (error) {
+        console.error('Error al insertar datos en la base de datos:', error);
+        res.status(500).send('Error al guardar los datos.', error);
+    }
 });
 
 app.listen(port, () => {
-    console.log(`Server running at http://localhost:${port}`);
+    console.log(`Servidor ejecutándose en http://localhost:${port}`);
+});
+
+// Endpoint para probar la conexión a la base de datos
+app.get('/test-db', async (req, res) => {
+    try {
+        const result = await pool.query('SELECT NOW()'); // Consulta simple para obtener la fecha y hora actuales
+        res.send(`Conexión exitosa. Hora actual en la base de datos: ${result.rows[0].now}`);
+    } catch (error) {
+        console.error('Error al conectar con la base de datos:', error);
+        res.status(500).send('Error al conectar con la base de datos.');
+    }
 });

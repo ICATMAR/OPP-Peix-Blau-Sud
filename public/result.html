@@ -22,126 +22,90 @@
         </div>
 
         <!-- Formulario principal -->
-        <form id="dataForm" class="form">
+        <form id="dataForm" class="form" action="/submit" method="POST">
+            <!-- Campos ocultos -->
+            <input type="hidden" id="hiddenBoatName" name="boat_name">
+            <input type="hidden" id="hiddenInitialPosition" name="initial_position">
+            <input type="hidden" id="hiddenInitialDateTime" name="initial_datetime">
 
-            <input type="hidden" id="hiddenBoatName" name="boatName">
-            <input type="hidden" id="hiddenInitialPosition" name="initialPosition">
-            <input type="hidden" id="hiddenInitialDateTime" name="initialDateTime">
-
+            <div class="form-group">
+                <label for="position">Posició:</label>
+                <input type="text" id="position" name="position" readonly>
+                <button type="button" class="btn" onclick="getLocation('position')">Obtenir posició</button>
+            </div>
+    
+            <div class="form-group">
+                <label for="timestamp">Hora:</label>
+                <input type="text" id="timestamp" name="timestamp" readonly>
+                <button type="button" class="btn" onclick="getDateTime('timestamp')">Obtenir hora</button>
+            </div>
+        
+            <!-- Sección PESCA -->
             <button type="button" class="btn-toggle" onclick="toggleSection('collapsibleSection1')">PESCA</button>
-
             <div id="collapsibleSection1" class="collapsible-section">
-                <div class="form-group">
-                    <label for="location1">Posició:</label>
-                    <input type="text" id="location1" name="location1" readonly>
-                    <button type="button" class="btn" onclick="getLocation('location1')">Obtenir posició</button>
-                </div>
 
+        
                 <div class="form-group">
-                    <label for="datetime1">Hora:</label>
-                    <input type="text" id="datetime1" name="datetime1" readonly>
-                    <button type="button" class="btn" onclick="getDateTime('datetime1')">Obtenir hora</button>
-                </div>
-
-                <div class="form-group">
-                    <label for="question1">Especie:</label>
-                    <select id="dropdown" name="dropdown">
-                        <option value="option1">Sardina</option>
-                        <option value="option2">Seitó</option>
-                        <option value="option3">Alatxa</option>                        
+                    <label for="dropdown1">Especie:</label>
+                    <select id="dropdown1" name="specie">
+                        <option value="null">----</option>
+                        <option value="sardina">Sardina</option>
+                        <option value="seito">Seitó</option>
+                        <option value="alatxa">Alatxa</option>
                     </select>
                 </div>
-
+        
                 <div class="form-group">
-                    <label for="question2">Kg:</label>
-                    <input type="text" id="question2" name="question2">
+                    <label for="kg1">Kg:</label>
+                    <input type="text" id="kg1" name="kg">
                 </div>
-                
+        
                 <div class="form-group">
-                    <label for="question2">Calibre:</label>
-                    <input type="text" id="question3" name="question3">
+                    <label for="caliber1">Calibre:</label>
+                    <input type="text" id="caliber1" name="caliber">
                 </div>
-                
             </div>
-
+        
+            <!-- Sección NO PESCA -->
             <button type="button" class="btn-toggle" onclick="toggleSection('collapsibleSection2')">NO PESCA</button>
-
             <div id="collapsibleSection2" class="collapsible-section">
+        
                 <div class="form-group">
-                    <label for="location2">Posició:</label>
-                    <input type="text" id="location2" name="location2" readonly>
-                    <button type="button" class="btn" onclick="getLocation('location2')">Obtenir posició</button>
-                </div>
-
-                <div class="form-group">
-                    <label for="datetime2">Hora:</label>
-                    <input type="text" id="datetime2" name="datetime2" readonly>
-                    <button type="button" class="btn" onclick="getDateTime('datetime2')">Obtenir hora</button>
-                </div>
-
-                <div class="form-group">
-                    <label for="question1">Especie:</label>
-                    <select id="dropdown" name="dropdown">
-                        <option value="option1">Sardina</option>
-                        <option value="option2">Seitó</option>
-                        <option value="option3">Alatxa</option>                        
+                    <label for="dropdown2">Motiu de no pesca:</label>
+                    <select id="dropdown2" name="no_fishing_reason">
+                        <option value="null">----</option>
+                        <option value="peix_petit">Peix petit</option>
+                        <option value="no_interes">No té interès econòmic</option>
+                        <option value="prohibicio">Prohibició de pesca</option>
+                        <option value="no_concentrat">Peix no concentrat</option>
+                        <option value="solta">Solta</option>
+                        <option value="altres">Altres</option>
                     </select>
                 </div>
-
-                <div class="form-group">
-                    <label for="question2">Kg:</label>
-                    <input type="text" id="question2" name="question2">
-                </div>
-
-                <div class="form-group">
-                    <label for="dropdown">Motiu de no pesca:</label>
-                    <select id="dropdown" name="dropdown">
-                        <option value="option1">Peix petit</option>
-                        <option value="option2">No té interès econòmic</option>
-                        <option value="option3">Prohibició de pesca</option>
-                        <option value="option4">Peix no concentrat</option>
-                        <option value="option5">Solta</option>
-                        <option value="option6">Altres</option>
-                    </select>
-                </div>
+            
             </div>
 
+            <!-- Sección INTERACCIÓ TONYINES -->
             <button type="button" class="btn-toggle" onclick="toggleSection('collapsibleSection3')">INTERACCIÓ TONYINES</button>
-
             <div id="collapsibleSection3" class="collapsible-section">
-                <div class="form-group">
-                    <label for="location3">Posició:</label>
-                    <input type="text" id="location3" name="location3" readonly>
-                    <button type="button" class="btn" onclick="getLocation('location3')">Obtenir posició</button>
-                </div>
-
-                <div class="form-group">
-                    <label for="datetime3">Hora:</label>
-                    <input type="text" id="datetime3" name="datetime3" readonly>
-                    <button type="button" class="btn" onclick="getDateTime('datetime3')">Obtenir hora</button>
-                </div>
-
+        
                 <div class="form-group">
                     <label for="numIndividuals">Número d'individus:</label>
-                    <input type="number" id="numIndividuals" name="numIndividuals" min="0">
+                    <input type="number" id="numIndividuals" name="num_individuals" min="0">
                 </div>
-
-                <div class="form-group">
-                    <label for="approxKg">Kg aproximats:</label>
-                    <input type="number" id="approxKg" name="approxKg" step="0.01" min="0">
-                </div>
-
+        
                 <div class="form-group">
                     <label for="interaction">Interacció:</label>
-                    <select id="interaction" name="interaction">
+                    <select id="interaction" name="interaccion">
+                        <option value="null">----</option>
                         <option value="cap">Cap</option>
-                        <option value="impedeix">Impedeix la maniobra de pesca</option>
-                        <option value="noConcentri">No permet que el peix es concentri</option>
+                        <option value="impedeix maniobra">Impedeix la maniobra de pesca</option>
+                        <option value="no permet concentració">No permet que el peix es concentri</option>
                         <option value="destroces">Destroces en l'art</option>
                     </select>
                 </div>
             </div>
-
+        
             <button type="submit" class="btn-submit">Envia</button>
         </form>
     </div>
@@ -188,13 +152,9 @@
             const now = new Date();
             document.getElementById(sectionId).value = now.toISOString();
         }
-
-        // Función para alternar secciones
-        // function toggleSection(sectionId) {
-        //     const section = document.getElementById(sectionId);
-        //     section.style.display = section.style.display === 'none' ? 'block' : 'none';
-        // }
-        // Función para alternar secciones y limpiar datos al cerrarlas
+        
+        // Función para alternar la visibilidad de las secciones
+        // y limpiar los datos de las secciones cerradas
         function toggleSection(sectionId) {
             const section = document.getElementById(sectionId);
             const isCurrentlyVisible = section.style.display === 'block';
@@ -228,6 +188,7 @@
                 }
             });
         }
+        
         // Validar que al menos un desplegable esté abierto antes de enviar el formulario
         document.getElementById('dataForm').addEventListener('submit', function(event) {
             const collapsibleSections = document.querySelectorAll('.collapsible-section');
@@ -244,6 +205,85 @@
                 alert('Por favor, rellena una opción antes de enviar el formulario.');
             }
         });
+
+
+        // Registrar el evento para inspeccionar los datos enviados
+        document.getElementById('dataForm').addEventListener('submit', function(event) {
+            const formData = new FormData(event.target);
+            console.log('Datos enviados:', Object.fromEntries(formData.entries()));
+        });
+
+        document.getElementById('dataForm').addEventListener('submit', function(event) {
+        // Prevenir el envío del formulario si no hay secciones abiertas
+        const collapsibleSections = document.querySelectorAll('.collapsible-section');
+        let isAnySectionOpen = false;
+
+        // Inicializar valores de fishing, no_fishing y tuna
+        let fishing = false;
+        let noFishing = false;
+        let tuna = false;
+
+        collapsibleSections.forEach(section => {
+            if (section.style.display === 'block') {
+                isAnySectionOpen = true;
+
+                // Detectar qué sección está abierta y asignar valores
+                if (section.id === 'collapsibleSection1') {
+                    fishing = true;
+                    noFishing = false;
+                    tuna = false;
+                } else if (section.id === 'collapsibleSection2') {
+                    noFishing = true;
+                    fishing = false;
+                    tuna = false;
+                } else if (section.id === 'collapsibleSection3') {
+                    tuna = true;
+                    fishing = false;
+                    noFishing = false;
+                }
+            }
+        });
+
+        if (!isAnySectionOpen) {
+            event.preventDefault(); // Evitar el envío del formulario
+            alert('Por favor, selecciona una opción antes de enviar el formulario.');
+            return;
+        }
+
+        // Crear campos ocultos para enviar los valores de fishing, no_fishing y tuna
+        const form = event.target;
+
+        // Eliminar campos ocultos existentes si ya están creados
+        ['fishing', 'no_fishing', 'tuna'].forEach(name => {
+            const existingInput = form.querySelector(`input[name="${name}"]`);
+            if (existingInput) {
+                existingInput.remove();
+            }
+        });
+
+        // Crear nuevos campos ocultos con los valores detectados
+        const fishingInput = document.createElement('input');
+        fishingInput.type = 'hidden';
+        fishingInput.name = 'fishing';
+        fishingInput.value = fishing;
+
+        const noFishingInput = document.createElement('input');
+        noFishingInput.type = 'hidden';
+        noFishingInput.name = 'no_fishing';
+        noFishingInput.value = noFishing;
+
+        const tunaInput = document.createElement('input');
+        tunaInput.type = 'hidden';
+        tunaInput.name = 'tuna';
+        tunaInput.value = tuna;
+
+        // Agregar los campos ocultos al formulario
+        form.appendChild(fishingInput);
+        form.appendChild(noFishingInput);
+        form.appendChild(tunaInput);
+
+        console.log('Datos enviados:', Object.fromEntries(new FormData(form).entries()));
+    });
     </script>
 </body>
 </html>
