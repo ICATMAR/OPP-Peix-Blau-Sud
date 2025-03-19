@@ -1,3 +1,17 @@
+/* Aplicar la tipografía globalmente */
+body {
+    font-family: 'Roboto', sans-serif;
+    color: #333; /* Color de texto predeterminado */
+    line-height: 1.6; /* Espaciado entre líneas */
+}
+
+/* Opcional: Estilo para títulos */
+.form-title {
+    font-family: 'Roboto', sans-serif;
+    font-weight: 700; /* Negrita */
+    font-size: 24px;
+    color: #1478a7;
+}
 /* Style for the container */
 .container {
     max-width: 600px;
@@ -46,6 +60,7 @@
 
 /* Style for input fields */
 .form-group input[type="text"],
+.form-group input[type="number"],
 .form-group select {
     width: calc(100% - 110px);
     padding: 10px;
