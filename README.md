@@ -19,7 +19,7 @@ Go to http://localhost:3000.
 
 ## Deploy notes
 
-Create dtabase
+Create dtabase like server.js code
 ```javascript
     user: 'postgres', 
     host: 'localhost', //select correcturl
