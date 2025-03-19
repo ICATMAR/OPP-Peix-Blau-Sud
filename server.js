@@ -41,9 +41,9 @@ app.post('/submit', async (req, res) => {
         formData.boat_name,
         formData.initial_position,
         initialDatetime,
-        !!formData.fishing, // Fishing
-        !!formData.no_fishing, // NoFishing
-        !!formData.tuna, // Tuna
+        formData.fishing, // Fishing
+        formData.no_fishing, // NoFishing
+        formData.tuna, // Tuna
         formData.position,
         formData.timestamp,
         formData.specie, // Specie
@@ -57,7 +57,7 @@ app.post('/submit', async (req, res) => {
     try {
         await pool.query(query, values);
         console.log('Datos insertados correctamente en la base de datos.');
-        res.send('Formulario enviado correctamente.');
+        res.redirect(`/result.html?boatName=${encodeURIComponent(formData.boat_name)}&initialPosition=${encodeURIComponent(formData.initial_position)}&initialDateTime=${encodeURIComponent(formData.initial_datetime)}`); // Redirigir a la página de resultado con los datos
     } catch (error) {
         console.error('Error al insertar datos en la base de datos:', error);
         res.status(500).send('Error al guardar los datos.', error);
