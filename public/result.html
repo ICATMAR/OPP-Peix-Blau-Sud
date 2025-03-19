@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <title>Resultats</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <!-- Cabecera con los datos del formulario inicial -->
+        <div class="form-header">
+            <img src="icatmar_logo.png" alt="Logo" class="logo">
+            <h1 class="form-title">OPP Peix Blau Tarragona</h1>
+        </div>
+
+        <div class="result-group">
+            <p><strong>Nom Barca:</strong> <span id="boatName"></span></p>
+            <p><strong>Data i Hora Sortida:</strong> <span id="initialDateTime"></span></p>
+            <p><strong>Posició Inicial:</strong> <span id="initialPosition"></span></p>
+        </div>
+
+        <!-- Formulario principal -->
+        <form id="dataForm" class="form">
+
+            <input type="hidden" id="hiddenBoatName" name="boatName">
+            <input type="hidden" id="hiddenInitialPosition" name="initialPosition">
+            <input type="hidden" id="hiddenInitialDateTime" name="initialDateTime">
+
+            <button type="button" class="btn-toggle" onclick="toggleSection('collapsibleSection1')">PESCA</button>
+
+            <div id="collapsibleSection1" class="collapsible-section">
+                <div class="form-group">
+                    <label for="location1">Posició:</label>
+                    <input type="text" id="location1" name="location1" readonly>
+                    <button type="button" class="btn" onclick="getLocation('location1')">Obtenir posició</button>
+                </div>
+
+                <div class="form-group">
+                    <label for="datetime1">Hora:</label>
+                    <input type="text" id="datetime1" name="datetime1" readonly>
+                    <button type="button" class="btn" onclick="getDateTime('datetime1')">Obtenir hora</button>
+                </div>
+
+                <div class="form-group">
+                    <label for="question1">Especie:</label>
+                    <select id="dropdown" name="dropdown">
+                        <option value="option1">Sardina</option>
+                        <option value="option2">Seitó</option>
+                        <option value="option3">Alatxa</option>                        
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="question2">Kg:</label>
+                    <input type="text" id="question2" name="question2">
+                </div>
+                
+                <div class="form-group">
+                    <label for="question2">Calibre:</label>
+                    <input type="text" id="question3" name="question3">
+                </div>
+                
+            </div>
+
+            <button type="button" class="btn-toggle" onclick="toggleSection('collapsibleSection2')">NO PESCA</button>
+
+            <div id="collapsibleSection2" class="collapsible-section">
+                <div class="form-group">
+                    <label for="location2">Posició:</label>
+                    <input type="text" id="location2" name="location2" readonly>
+                    <button type="button" class="btn" onclick="getLocation('location2')">Obtenir posició</button>
+                </div>
+
+                <div class="form-group">
+                    <label for="datetime2">Hora:</label>
+                    <input type="text" id="datetime2" name="datetime2" readonly>
+                    <button type="button" class="btn" onclick="getDateTime('datetime2')">Obtenir hora</button>
+                </div>
+
+                <div class="form-group">
+                    <label for="question1">Especie:</label>
+                    <select id="dropdown" name="dropdown">
+                        <option value="option1">Sardina</option>
+                        <option value="option2">Seitó</option>
+                        <option value="option3">Alatxa</option>                        
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="question2">Kg:</label>
+                    <input type="text" id="question2" name="question2">
+                </div>
+
+                <div class="form-group">
+                    <label for="dropdown">Motiu de no pesca:</label>
+                    <select id="dropdown" name="dropdown">
+                        <option value="option1">Peix petit</option>
+                        <option value="option2">No té interès econòmic</option>
+                        <option value="option3">Prohibició de pesca</option>
+                        <option value="option4">Peix no concentrat</option>
+                        <option value="option5">Solta</option>
+                        <option value="option6">Altres</option>
+                    </select>
+                </div>
+            </div>
+
+            <button type="button" class="btn-toggle" onclick="toggleSection('collapsibleSection3')">INTERACCIÓ TONYINES</button>
+
+            <div id="collapsibleSection3" class="collapsible-section">
+                <div class="form-group">
+                    <label for="location3">Posició:</label>
+                    <input type="text" id="location3" name="location3" readonly>
+                    <button type="button" class="btn" onclick="getLocation('location3')">Obtenir posició</button>
+                </div>
+
+                <div class="form-group">
+                    <label for="datetime3">Hora:</label>
+                    <input type="text" id="datetime3" name="datetime3" readonly>
+                    <button type="button" class="btn" onclick="getDateTime('datetime3')">Obtenir hora</button>
+                </div>
+
+                <div class="form-group">
+                    <label for="numIndividuals">Número d'individus:</label>
+                    <input type="number" id="numIndividuals" name="numIndividuals" min="0">
+                </div>
+
+                <div class="form-group">
+                    <label for="approxKg">Kg aproximats:</label>
+                    <input type="number" id="approxKg" name="approxKg" step="0.01" min="0">
+                </div>
+
+                <div class="form-group">
+                    <label for="interaction">Interacció:</label>
+                    <select id="interaction" name="interaction">
+                        <option value="cap">Cap</option>
+                        <option value="impedeix">Impedeix la maniobra de pesca</option>
+                        <option value="noConcentri">No permet que el peix es concentri</option>
+                        <option value="destroces">Destroces en l'art</option>
+                    </select>
+                </div>
+            </div>
+
+            <button type="submit" class="btn-submit">Envia</button>
+        </form>
+    </div>
+
+    <script>
+        // Obtener parámetros de la URL
+        function getQueryParams() {
+            const params = new URLSearchParams(window.location.search);
+            return {
+                boatName: params.get('boatName'),
+                initialPosition: params.get('initialPosition'),
+                initialDateTime: params.get('initialDateTime'),
+            };
+        }
+
+        // Mostrar los datos en la cabecera
+        // y rellenar los campos ocultos
+        // al cargar la página
+        document.addEventListener('DOMContentLoaded', () => {
+            const { boatName, initialPosition, initialDateTime } = getQueryParams();
+            document.getElementById('boatName').textContent = boatName || 'No especificat';
+            document.getElementById('initialPosition').textContent = initialPosition || 'No especificat';
+            document.getElementById('initialDateTime').textContent = initialDateTime || 'No especificat';
+
+            // Rellenar los campos ocultos con los valores de la cabecera
+            document.getElementById('hiddenBoatName').value = boatName || '';
+            document.getElementById('hiddenInitialPosition').value = initialPosition || '';
+            document.getElementById('hiddenInitialDateTime').value = initialDateTime || '';
+        });
+
+        // Funciones para obtener ubicación y fecha/hora
+        function getLocation(sectionId) {
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(function(position) {
+                    document.getElementById(sectionId).value = 
+                        position.coords.latitude + ', ' + position.coords.longitude;
+                });
+            } else {
+                alert("Geolocation is not supported by this browser.");
+            }
+        }
+
+        function getDateTime(sectionId) {
+            const now = new Date();
+            document.getElementById(sectionId).value = now.toISOString();
+        }
+
+        // Función para alternar secciones
+        // function toggleSection(sectionId) {
+        //     const section = document.getElementById(sectionId);
+        //     section.style.display = section.style.display === 'none' ? 'block' : 'none';
+        // }
+        // Función para alternar secciones y limpiar datos al cerrarlas
+        function toggleSection(sectionId) {
+            const section = document.getElementById(sectionId);
+            const isCurrentlyVisible = section.style.display === 'block';
+
+            // Cerrar todas las secciones
+            const collapsibleSections = document.querySelectorAll('.collapsible-section');
+            collapsibleSections.forEach(sec => {
+                sec.style.display = 'none';
+                if (sec.id !== sectionId) {
+                    clearSectionData(sec); // Limpiar datos de las secciones cerradas
+                }
+            });
+
+            // Alternar visibilidad de la sección seleccionada
+            section.style.display = isCurrentlyVisible ? 'none' : 'block';
+
+            // Si se cierra la sección seleccionada, limpiar sus datos
+            if (isCurrentlyVisible) {
+                clearSectionData(section);
+            }
+        }
+
+        // Función para limpiar los datos de una sección
+        function clearSectionData(section) {
+            const inputs = section.querySelectorAll('input, select');
+            inputs.forEach(input => {
+                if (input.type === 'text' || input.type === 'number') {
+                    input.value = ''; // Limpiar campos de texto y números
+                } else if (input.tagName === 'SELECT') {
+                    input.selectedIndex = 0; // Restablecer el valor del select al primero
+                }
+            });
+        }
+        // Validar que al menos un desplegable esté abierto antes de enviar el formulario
+        document.getElementById('dataForm').addEventListener('submit', function(event) {
+            const collapsibleSections = document.querySelectorAll('.collapsible-section');
+            let isAnySectionOpen = false;
+
+            collapsibleSections.forEach(section => {
+                if (section.style.display === 'block') {
+                    isAnySectionOpen = true;
+                }
+            });
+
+            if (!isAnySectionOpen) {
+                event.preventDefault(); // Evitar el envío del formulario
+                alert('Por favor, rellena una opción antes de enviar el formulario.');
+            }
+        });
+    </script>
+</body>
+</html>
