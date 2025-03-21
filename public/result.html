@@ -123,6 +123,7 @@
                 boatName: params.get('boatName'),
                 initialPosition: params.get('initialPosition'),
                 initialDateTime: params.get('initialDateTime'),
+                error: params.get('error')
             };
         }
 
@@ -130,7 +131,7 @@
         // y rellenar los campos ocultos
         // al cargar la página
         document.addEventListener('DOMContentLoaded', () => {
-            const { boatName, initialPosition, initialDateTime } = getQueryParams();
+            const { boatName, initialPosition, initialDateTime, error } = getQueryParams();
             document.getElementById('boatName').textContent = boatName || 'No especificat';
             document.getElementById('initialPosition').textContent = initialPosition || 'No especificat';
             document.getElementById('initialDateTime').textContent = initialDateTime || 'No especificat';
@@ -139,6 +140,11 @@
             document.getElementById('hiddenBoatName').value = boatName || '';
             document.getElementById('hiddenInitialPosition').value = initialPosition || '';
             document.getElementById('hiddenInitialDateTime').value = initialDateTime || '';
+
+            // Mostrar un mensaje de alerta si hay un error
+            if (error === 'db_connection_failed') {
+                alert('No se pudo conectar a la base de datos. Por favor, inténtalo de nuevo más tarde.');
+            }
         });
 
         // Funciones para obtener ubicación y fecha/hora

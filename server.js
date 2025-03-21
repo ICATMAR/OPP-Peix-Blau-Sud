@@ -60,8 +60,16 @@ app.post('/submit', async (req, res) => {
         res.redirect(`/result.html?boatName=${encodeURIComponent(formData.boat_name)}&initialPosition=${encodeURIComponent(formData.initial_position)}&initialDateTime=${encodeURIComponent(formData.initial_datetime)}`); // Redirigir a la página de resultado con los datos
     } catch (error) {
         console.error('Error al insertar datos en la base de datos:', error);
-        res.status(500).send('Error al guardar los datos.', error);
-    }
+
+        // Redirigir a result.html con los datos y un mensaje de error
+        const queryParams = new URLSearchParams({
+            boatName: formData.boat_name,
+            initialPosition: formData.initial_position,
+            initialDateTime: formData.initial_datetime,
+            error: 'db_connection_failed'
+        }).toString();
+
+        res.redirect(`/result.html?${queryParams}`);    }
 });
 
 app.listen(port, () => {
