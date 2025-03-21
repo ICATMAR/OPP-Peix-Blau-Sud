@@ -30,13 +30,13 @@
 
             <div class="form-group">
                 <label for="position">Posició:</label>
-                <input type="text" id="position" name="position" readonly>
+                <input type="text" id="position" name="position" readonly required>
                 <button type="button" class="btn" onclick="getLocation('position')">Obtenir posició</button>
             </div>
     
             <div class="form-group">
                 <label for="timestamp">Hora:</label>
-                <input type="text" id="timestamp" name="timestamp" readonly>
+                <input type="text" id="timestamp" name="timestamp" readonly required>
                 <button type="button" class="btn" onclick="getDateTime('timestamp')">Obtenir hora</button>
             </div>
         
@@ -56,13 +56,18 @@
                 </div>
         
                 <div class="form-group">
-                    <label for="kg1">Kg:</label>
-                    <input type="text" id="kg1" name="kg">
+                    <label for="kg_catch">Kg:</label>
+                    <input type="number" id="kg_catch" name="kg_catch" min="0">
                 </div>
         
                 <div class="form-group">
                     <label for="caliber1">Calibre:</label>
-                    <input type="text" id="caliber1" name="caliber">
+                    <select id="dropdown2" name="caliber">
+                        <option value="null">----</option>
+                        <option value="gran">1 - Gran</option>
+                        <option value="mitja">2 - Mitjà</option>
+                        <option value="petit">3 - Petit</option>
+                    </select>
                 </div>
             </div>
         
@@ -90,8 +95,8 @@
             <div id="collapsibleSection3" class="collapsible-section">
         
                 <div class="form-group">
-                    <label for="numIndividuals">Número d'individus:</label>
-                    <input type="number" id="numIndividuals" name="num_individuals" min="0">
+                    <label for="kg_tuna">Kg:</label>
+                    <input type="number" id="kg_tuna" name="kg_tuna" min="0">
                 </div>
         
                 <div class="form-group">

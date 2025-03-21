@@ -34,7 +34,7 @@ app.post('/submit', async (req, res) => {
     // Insertar los datos en la base de datos
     const query = `
         INSERT INTO opp_forms (
-            boat_name, initial_position, initial_datetime, fishing, no_fishing, tuna, position, timestamp, specie, kg, no_fishing_reason, caliber, num_individuals, interaccion
+            boat_name, initial_position, initial_datetime, fishing, no_fishing, tuna, position, timestamp, specie, kg_catch, no_fishing_reason, caliber, kg_tuna, interaccion
         ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14)
     `;
     const values = [
@@ -44,13 +44,13 @@ app.post('/submit', async (req, res) => {
         formData.fishing, // Fishing
         formData.no_fishing, // NoFishing
         formData.tuna, // Tuna
-        formData.position,
-        formData.timestamp,
+        formData.position || null, // Position
+        formData.timestamp || null, // Timestamp
         formData.specie, // Specie
-        formData.kg || null, // KG
+        formData.kg_catch || null, // KG
         formData.no_fishing_reason, // NoFishingReason
         formData.caliber, // Caliber
-        formData.num_individuals || null, // NumIndividuals
+        formData.kg_tuna || null, // NumIndividuals
         formData.interaccion, // Interaccion
     ];
 

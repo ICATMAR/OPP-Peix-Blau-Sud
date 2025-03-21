@@ -51,10 +51,10 @@ CREATE TABLE IF NOT EXISTS public.opp_forms
     "position" text COLLATE pg_catalog."default",
     "timestamp" timestamp without time zone,
     specie text COLLATE pg_catalog."default",
-    kg numeric,
+    kg_catch numeric,
     no_fishing_reason text COLLATE pg_catalog."default",
     caliber text COLLATE pg_catalog."default",
-    num_individuals integer,
+    kg_tuna numeric,
     interaccion text COLLATE pg_catalog."default"
 )
 
