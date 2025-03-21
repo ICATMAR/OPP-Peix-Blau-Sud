@@ -27,9 +27,14 @@
             </div>
     
             <div class="form-group">
-                <label for="initialPosition">Posició:</label>
-                <input type="text" id="initialPosition" name="initialPosition" readonly>
-                <button type="button" class="btn" onclick="getLocation('initialPosition')">Obtenir posició</button>
+                <label for="initialPosition">Port de sortida:</label>
+                <!-- <input type="text" id="initialPosition" name="initialPosition" readonly> -->
+                <select id="initialPosition" name="initialPosition" required>
+                    <option value="" disabled selected>Selecciona un port</option>
+                    <option value="Port de Tarragona">Port de Tarragona</option>
+                    <option value="Port de Cambrils">Port de Cambrils</option>
+                    <option value="Port de Salou">Port de Salou</option>
+                </select>
             </div>
 
             <div class="form-group">
