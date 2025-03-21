@@ -4,22 +4,27 @@
 
 Install Node.js from nodejs.org.
 Install dependencies:
+
 ```bash
     npm install express.
     npm install csv-writer
     npm install body-parser
     npm install moment
 ```
+
 Run the server
+
 ```bash
     node server.js
 ```
+
 Open your browser.
-Go to http://localhost:3000.
+Go to <http://localhost:3000>.
 
 ## Deploy notes
 
 Create dtabase like server.js code
+
 ```javascript
     user: 'postgres', 
     host: 'localhost', //select correcturl
@@ -29,6 +34,7 @@ Create dtabase like server.js code
 ```
 
 create table opp_forms using following query:
+
 ```SQL
 -- Table: public.opp_forms
 
@@ -45,10 +51,10 @@ CREATE TABLE IF NOT EXISTS public.opp_forms
     "position" text COLLATE pg_catalog."default",
     "timestamp" timestamp without time zone,
     specie text COLLATE pg_catalog."default",
-    kg numeric,
+    kg_catch numeric,
     no_fishing_reason text COLLATE pg_catalog."default",
     caliber text COLLATE pg_catalog."default",
-    num_individuals integer,
+    kg_tuna numeric,
     interaccion text COLLATE pg_catalog."default"
 )
 

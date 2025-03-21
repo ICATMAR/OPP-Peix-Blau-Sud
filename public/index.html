@@ -27,15 +27,19 @@
             </div>
     
             <div class="form-group">
-                <label for="initialPosition">Posició:</label>
-                <input type="text" id="initialPosition" name="initialPosition" readonly>
-                <button type="button" class="btn" onclick="getLocation('initialPosition')">Obtenir posició</button>
+                <label for="initialPosition">Port de sortida:</label>
+                <!-- <input type="text" id="initialPosition" name="initialPosition" readonly> -->
+                <select id="initialPosition" name="initialPosition" required>
+                    <option value="" disabled selected>Selecciona un port</option>
+                    <option value="Port de Tarragona">Port de Tarragona</option>
+                    <option value="Port de Cambrils">Port de Cambrils</option>
+                    <option value="Port de Salou">Port de Salou</option>
+                </select>
             </div>
 
             <div class="form-group">
-                <label for="initialDateTime">Data i Hora:</label>
-                <input type="text" id="initialDateTime" name="initialDateTime" readonly>
-                <button type="button" class="btn" onclick="getDateTime('initialDateTime')">Obtenir data i hora</button>
+                <label for="initialDateTime">Data i Hora de sortida:</label>
+                <input type="datetime-local" id="initialDateTime" name="initialDateTime" required>
             </div>
 
             <button type="submit" class="btn-submit">Continuar</button>
@@ -67,7 +71,8 @@
             event.preventDefault();
             const boatName = document.getElementById('boatName').value;
             const initialPosition = document.getElementById('initialPosition').value;
-            const initialDateTime = document.getElementById('initialDateTime').value;
+            const initialDateTimeNoFormat = document.getElementById('initialDateTime').value;
+            const initialDateTime = new Date(initialDateTimeNoFormat).toLocaleString(); // Convertir la fecha y hora a formato local
 
             // Redirigir a la página de resultados con los datos en la URL
             window.location.href = `result.html?boatName=${encodeURIComponent(boatName)}&initialPosition=${encodeURIComponent(initialPosition)}&initialDateTime=${encodeURIComponent(initialDateTime)}`;
