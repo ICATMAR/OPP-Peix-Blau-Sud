@@ -27,16 +27,32 @@
             <input type="hidden" id="hiddenBoatName" name="boat_name">
             <input type="hidden" id="hiddenInitialPosition" name="initial_position">
             <input type="hidden" id="hiddenInitialDateTime" name="initial_datetime">
+            <input type="hidden" id="position" name="position">
 
             <div class="form-group">
-                <label for="position">Posició:</label>
-                <input type="text" id="position" name="position" readonly required>
-                <button type="button" class="btn" onclick="getLocation('position')">Obtenir posició</button>
+                <label>Posició:</label>
+                <div class="position-row">
+                    <input type="number" id="lat_deg" name="lat_deg" min="0" max="90" placeholder="Lat º" required>
+                    <input type="number" id="lat_min" name="lat_min" min="0" max="59.999" step="0.001" placeholder="Lat '" required>
+                    <select id="lat_dir" name="lat_dir" required>
+                        <option value="N">N</option>
+                        <option value="S">S</option>
+                    </select>
+                </div>
+                <div class="position-row">
+                    <input type="number" id="lon_deg" name="lon_deg" min="0" max="180" placeholder="Lon º" required>
+                    <input type="number" id="lon_min" name="lon_min" min="0" max="59.999" step="0.001" placeholder="Lon '" required>
+                    <select id="lon_dir" name="lon_dir" required>
+                        <option value="E">E</option>
+                        <option value="W">W</option>
+                    </select>
+                </div>
+                <button type="button" class="btn" onclick="fillPositionFromGPS()">Obtenir posició</button>
             </div>
     
             <div class="form-group">
-                <label for="timestamp">Hora:</label>
-                <input type="text" id="timestamp" name="timestamp" readonly required>
+                <label for="timestamp">Data i hora:</label>
+                <input type="datetime-local" id="timestamp" name="timestamp" required>
                 <button type="button" class="btn" onclick="getDateTime('timestamp')">Obtenir hora</button>
             </div>
         
@@ -89,7 +105,14 @@
             <div id="collapsibleSection3" class="collapsible-section">
                 <div class="form-group">
                     <label for="kg_tuna">Kg:</label>
-                    <input type="number" id="kg_tuna" name="kg_tuna" min="0">
+                    <select id="kg_tuna" name="kg_tuna">
+                        <option value="" disabled selected>Selecciona kg</option>
+                        <option value="10">10</option>
+                        <option value="50">50</option>
+                        <option value="100">100</option>
+                        <option value="200">200</option>
+                        <option value="500">500</option>
+                    </select>
                 </div>
                 <div class="form-group">
                     <label for="interaction">Interacció:</label>
@@ -125,20 +148,16 @@
         });
 
         // Funciones para obtener ubicación y fecha/hora
-        function getLocation(sectionId) {
-            if (navigator.geolocation) {
-                navigator.geolocation.getCurrentPosition(function(position) {
-                    document.getElementById(sectionId).value = 
-                        position.coords.latitude + ', ' + position.coords.longitude;
-                });
-            } else {
-                alert("Geolocation is not supported by this browser.");
-            }
-        }
-
         function getDateTime(sectionId) {
             const now = new Date();
-            document.getElementById(sectionId).value = now.toISOString();
+            // Formato YYYY-MM-DDTHH:MM (para input datetime-local)
+            const year = now.getFullYear();
+            const month = String(now.getMonth() + 1).padStart(2, '0');
+            const day = String(now.getDate()).padStart(2, '0');
+            const hours = String(now.getHours()).padStart(2, '0');
+            const minutes = String(now.getMinutes()).padStart(2, '0');
+            const formatted = `${year}-${month}-${day}T${hours}:${minutes}`;
+            document.getElementById(sectionId).value = formatted;
         }
         
         // Función para alternar la visibilidad de las secciones
@@ -237,7 +256,54 @@
             this.appendChild(fishingInput);
             this.appendChild(noFishingInput);
             this.appendChild(tunaInput);
+
+            // Convertir grados/minutos a decimal y guardar en el campo oculto
+            const latDeg = parseFloat(document.getElementById('lat_deg').value) || 0;
+            const latMin = parseFloat(document.getElementById('lat_min').value) || 0;
+            const latDir = document.getElementById('lat_dir').value;
+            const lonDeg = parseFloat(document.getElementById('lon_deg').value) || 0;
+            const lonMin = parseFloat(document.getElementById('lon_min').value) || 0;
+            const lonDir = document.getElementById('lon_dir').value;
+
+            // Conversión a decimal
+            let latDecimal = latDeg + (latMin / 60);
+            if (latDir === 'S') latDecimal = -latDecimal;
+            let lonDecimal = lonDeg + (lonMin / 60);
+            if (lonDir === 'W') lonDecimal = -lonDecimal;
+
+            // Formato: 41.4121984, 2.1397504
+            const positionStr = `${latDecimal.toFixed(7)}, ${lonDecimal.toFixed(7)}`;
+            document.getElementById('position').value = positionStr;
         });
+
+        function fillPositionFromGPS() {
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(function(pos) {
+                    // Latitud
+                    let lat = pos.coords.latitude;
+                    let latDir = lat >= 0 ? 'N' : 'S';
+                    lat = Math.abs(lat);
+                    let latDeg = Math.floor(lat);
+                    let latMin = (lat - latDeg) * 60;
+
+                    // Longitud
+                    let lon = pos.coords.longitude;
+                    let lonDir = lon >= 0 ? 'E' : 'W';
+                    lon = Math.abs(lon);
+                    let lonDeg = Math.floor(lon);
+                    let lonMin = (lon - lonDeg) * 60;
+
+                    document.getElementById('lat_deg').value = latDeg;
+                    document.getElementById('lat_min').value = latMin.toFixed(3);
+                    document.getElementById('lat_dir').value = latDir;
+                    document.getElementById('lon_deg').value = lonDeg;
+                    document.getElementById('lon_min').value = lonMin.toFixed(3);
+                    document.getElementById('lon_dir').value = lonDir;
+                });
+            } else {
+                alert("Geolocation is not supported by this browser.");
+            }
+        }
     </script>
 </body>
 </html>
