@@ -43,8 +43,6 @@
             <!-- Sección PESCA -->
             <button type="button" class="btn-toggle" onclick="toggleSection('collapsibleSection1')">PESCA</button>
             <div id="collapsibleSection1" class="collapsible-section">
-
-        
                 <div class="form-group">
                     <label for="dropdown1">Especie:</label>
                     <select id="dropdown1" name="specie">
@@ -54,12 +52,10 @@
                         <option value="alatxa">Alatxa</option>
                     </select>
                 </div>
-        
                 <div class="form-group">
                     <label for="kg_catch">Kg:</label>
                     <input type="number" id="kg_catch" name="kg_catch" min="0">
                 </div>
-        
                 <div class="form-group">
                     <label for="caliber1">Calibre:</label>
                     <select id="dropdown2" name="caliber">
@@ -74,7 +70,6 @@
             <!-- Sección NO PESCA -->
             <button type="button" class="btn-toggle" onclick="toggleSection('collapsibleSection2')">NO PESCA</button>
             <div id="collapsibleSection2" class="collapsible-section">
-        
                 <div class="form-group">
                     <label for="dropdown2">Motiu de no pesca:</label>
                     <select id="dropdown2" name="no_fishing_reason">
@@ -87,18 +82,15 @@
                         <option value="altres">Altres</option>
                     </select>
                 </div>
-            
             </div>
 
             <!-- Sección INTERACCIÓ TONYINES -->
             <button type="button" class="btn-toggle" onclick="toggleSection('collapsibleSection3')">INTERACCIÓ TONYINES</button>
             <div id="collapsibleSection3" class="collapsible-section">
-        
                 <div class="form-group">
                     <label for="kg_tuna">Kg:</label>
                     <input type="number" id="kg_tuna" name="kg_tuna" min="0">
                 </div>
-        
                 <div class="form-group">
                     <label for="interaction">Interacció:</label>
                     <select id="interaction" name="interaccion">
@@ -116,35 +108,20 @@
     </div>
 
     <script>
-        // Obtener parámetros de la URL
-        function getQueryParams() {
-            const params = new URLSearchParams(window.location.search);
-            return {
-                boatName: params.get('boatName'),
-                initialPosition: params.get('initialPosition'),
-                initialDateTime: params.get('initialDateTime'),
-                error: params.get('error')
-            };
-        }
-
-        // Mostrar los datos en la cabecera
-        // y rellenar los campos ocultos
-        // al cargar la página
+        // Mostrar los datos en la cabecera y rellenar los campos ocultos
         document.addEventListener('DOMContentLoaded', () => {
-            const { boatName, initialPosition, initialDateTime, error } = getQueryParams();
+            // Recuperar de localStorage
+            const boatName = localStorage.getItem('boatName');
+            const initialPosition = localStorage.getItem('initialPosition');
+            const initialDateTime = localStorage.getItem('initialDateTime');
+
             document.getElementById('boatName').textContent = boatName || 'No especificat';
             document.getElementById('initialPosition').textContent = initialPosition || 'No especificat';
             document.getElementById('initialDateTime').textContent = initialDateTime || 'No especificat';
 
-            // Rellenar los campos ocultos con los valores de la cabecera
             document.getElementById('hiddenBoatName').value = boatName || '';
             document.getElementById('hiddenInitialPosition').value = initialPosition || '';
             document.getElementById('hiddenInitialDateTime').value = initialDateTime || '';
-
-            // Mostrar un mensaje de alerta si hay un error
-            if (error === 'db_connection_failed') {
-                alert('No se pudo conectar a la base de datos. Por favor, inténtalo de nuevo más tarde.');
-            }
         });
 
         // Funciones para obtener ubicación y fecha/hora
@@ -164,117 +141,6 @@
             document.getElementById(sectionId).value = now.toISOString();
         }
         
-        // Función para alternar la visibilidad de las secciones
-        // y limpiar los datos de las secciones cerradas
-        function toggleSection(sectionId) {
-            const section = document.getElementById(sectionId);
-            const isCurrentlyVisible = section.style.display === 'block';
-
-            // Cerrar todas las secciones
-            const collapsibleSections = document.querySelectorAll('.collapsible-section');
-            collapsibleSections.forEach(sec => {
-                sec.style.display = 'none';
-                if (sec.id !== sectionId) {
-                    clearSectionData(sec); // Limpiar datos de las secciones cerradas
-                }
-            });
-
-            // Alternar visibilidad de la sección seleccionada
-            section.style.display = isCurrentlyVisible ? 'none' : 'block';
-
-            // Si se cierra la sección seleccionada, limpiar sus datos
-            if (isCurrentlyVisible) {
-                clearSectionData(section);
-            }
-        }
-
-        // Función para limpiar los datos de una sección
-        function clearSectionData(section) {
-            const inputs = section.querySelectorAll('input, select');
-            inputs.forEach(input => {
-                if (input.type === 'text' || input.type === 'number') {
-                    input.value = ''; // Limpiar campos de texto y números
-                } else if (input.tagName === 'SELECT') {
-                    input.selectedIndex = 0; // Restablecer el valor del select al primero
-                }
-            });
-        }
-        
-        // Manejar el envío del formulario
-        // y crear campos ocultos para los valores de fishing, no_fishing y tuna
-        document.getElementById('dataForm').addEventListener('submit', function(event) {
-            // Prevenir el envío del formulario si no hay secciones abiertas
-            const collapsibleSections = document.querySelectorAll('.collapsible-section');
-            let isAnySectionOpen = false;
-
-            // Inicializar valores de fishing, no_fishing y tuna
-            let fishing = false;
-            let noFishing = false;
-            let tuna = false;
-
-            collapsibleSections.forEach(section => {
-                const isVisible = window.getComputedStyle(section).display !== 'none'; // Detectar si está visible
-                if (isVisible) {
-                    isAnySectionOpen = true;
-
-                    // Detectar qué sección está abierta y asignar valores
-                    if (section.id === 'collapsibleSection1') {
-                        fishing = true;
-                        noFishing = false;
-                        tuna = false;
-                    } else if (section.id === 'collapsibleSection2') {
-                        noFishing = true;
-                        fishing = false;
-                        tuna = false;
-                    } else if (section.id === 'collapsibleSection3') {
-                        tuna = true;
-                        fishing = false;
-                        noFishing = false;
-                    }
-                }
-            });
-
-            if (!isAnySectionOpen) {
-                event.preventDefault(); // Evitar el envío del formulario
-                alert('Por favor, selecciona una opción antes de enviar el formulario.');
-                return;
-            }
-
-            // Crear campos ocultos para enviar los valores de fishing, no_fishing y tuna
-            const form = event.target;
-
-            // Eliminar campos ocultos existentes si ya están creados
-            ['fishing', 'no_fishing', 'tuna'].forEach(name => {
-                const existingInput = form.querySelector(`input[name="${name}"]`);
-                if (existingInput) {
-                    existingInput.remove();
-                }
-            });
-
-            // Crear nuevos campos ocultos con los valores detectados
-            const fishingInput = document.createElement('input');
-            fishingInput.type = 'hidden';
-            fishingInput.name = 'fishing';
-            fishingInput.value = fishing;
-
-            const noFishingInput = document.createElement('input');
-            noFishingInput.type = 'hidden';
-            noFishingInput.name = 'no_fishing';
-            noFishingInput.value = noFishing;
-
-            const tunaInput = document.createElement('input');
-            tunaInput.type = 'hidden';
-            tunaInput.name = 'tuna';
-            tunaInput.value = tuna;
-
-            // Agregar los campos ocultos al formulario
-            form.appendChild(fishingInput);
-            form.appendChild(noFishingInput);
-            form.appendChild(tunaInput);
-
-            console.log('Datos enviados:', Object.fromEntries(new FormData(form).entries()));
-        });
-
         // Función para alternar la visibilidad de las secciones
         function toggleSection(sectionId) {
             const section = document.getElementById(sectionId);
@@ -303,13 +169,75 @@
             const inputs = section.querySelectorAll('input, select');
             inputs.forEach(input => {
                 if (input.type === 'text' || input.type === 'number') {
-                    input.value = ''; // Limpiar campos de texto y números
+                    input.value = '';
                 } else if (input.tagName === 'SELECT') {
-                    input.selectedIndex = 0; // Restablecer el valor del select al primero
+                    input.selectedIndex = 0;
                 }
             });
         }
-   
-   </script>
+        
+        // Manejar el envío del formulario y crear campos ocultos para los valores de fishing, no_fishing y tuna
+        document.getElementById('dataForm').addEventListener('submit', function(event) {
+            const collapsibleSections = document.querySelectorAll('.collapsible-section');
+            let isAnySectionOpen = false;
+            let fishing = false;
+            let noFishing = false;
+            let tuna = false;
+
+            collapsibleSections.forEach(section => {
+                const isVisible = window.getComputedStyle(section).display !== 'none';
+                if (isVisible) {
+                    isAnySectionOpen = true;
+                    if (section.id === 'collapsibleSection1') {
+                        fishing = true;
+                        noFishing = false;
+                        tuna = false;
+                    } else if (section.id === 'collapsibleSection2') {
+                        noFishing = true;
+                        fishing = false;
+                        tuna = false;
+                    } else if (section.id === 'collapsibleSection3') {
+                        tuna = true;
+                        fishing = false;
+                        noFishing = false;
+                    }
+                }
+            });
+
+            if (!isAnySectionOpen) {
+                event.preventDefault();
+                alert('Por favor, selecciona una opción antes de enviar el formulario.');
+                return;
+            }
+
+            // Eliminar campos ocultos existentes si ya están creados
+            ['fishing', 'no_fishing', 'tuna'].forEach(name => {
+                const existingInput = this.querySelector(`input[name="${name}"]`);
+                if (existingInput) {
+                    existingInput.remove();
+                }
+            });
+
+            // Crear nuevos campos ocultos con los valores detectados
+            const fishingInput = document.createElement('input');
+            fishingInput.type = 'hidden';
+            fishingInput.name = 'fishing';
+            fishingInput.value = fishing;
+
+            const noFishingInput = document.createElement('input');
+            noFishingInput.type = 'hidden';
+            noFishingInput.name = 'no_fishing';
+            noFishingInput.value = noFishing;
+
+            const tunaInput = document.createElement('input');
+            tunaInput.type = 'hidden';
+            tunaInput.name = 'tuna';
+            tunaInput.value = tuna;
+
+            this.appendChild(fishingInput);
+            this.appendChild(noFishingInput);
+            this.appendChild(tunaInput);
+        });
+    </script>
 </body>
 </html>

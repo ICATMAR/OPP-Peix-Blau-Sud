@@ -17,22 +17,20 @@
 
             <div class="form-group">
                 <label for="boatName">Barca:</label>
-                <!-- <input type="text" id="boatName" name="boatName" required> -->
                 <select id="boatName" name="boatName" required>
                     <option value="" disabled selected>Selecciona una barca</option>
-                    <option value="Barca 1">Barca 1</option>
+                    <option value="Barca 1">Afra Uno</option>
                     <option value="Barca 2">Barca 2</option>
                     <option value="Barca 3">Barca 3</option>
-                    <option value="Barca 4">Barca 3</option>
+                    <option value="Barca 4">Barca 4</option>
                 </select>
             </div>
     
             <div class="form-group">
                 <label for="initialPosition">Port de sortida:</label>
-                <!-- <input type="text" id="initialPosition" name="initialPosition" readonly> -->
                 <select id="initialPosition" name="initialPosition" required>
                     <option value="" disabled selected>Selecciona un port</option>
-                    <option value="Port de Tarragona">Port de Tarragona</option>
+                    <option value="Port de Tarragona">Port de l'Escala</option>
                     <option value="Port de Cambrils">Port de Cambrils</option>
                     <option value="Port de Salou">Port de Salou</option>
                 </select>
@@ -48,35 +46,21 @@
     </div>
 
     <script>
-        // Obtener ubicación
-        function getLocation(sectionId) {
-            if (navigator.geolocation) {
-                navigator.geolocation.getCurrentPosition(function(position) {
-                    document.getElementById(sectionId).value = 
-                        position.coords.latitude + ', ' + position.coords.longitude;
-                });
-            } else {
-                alert("Geolocation is not supported by this browser.");
-            }
-        }
-
-        // Obtener fecha y hora
-        function getDateTime(sectionId) {
-            const now = new Date();
-            const localDateTime = now.toLocaleString(); // Obtiene la fecha y hora local
-            document.getElementById(sectionId).value = localDateTime;
-        }
-
         // Manejar el envío del formulario
         function handleSubmit(event) {
             event.preventDefault();
             const boatName = document.getElementById('boatName').value;
             const initialPosition = document.getElementById('initialPosition').value;
             const initialDateTimeNoFormat = document.getElementById('initialDateTime').value;
-            const initialDateTime = new Date(initialDateTimeNoFormat).toLocaleString(); // Convertir la fecha y hora a formato local
+            const initialDateTime = new Date(initialDateTimeNoFormat).toLocaleString();
 
-            // Redirigir a la página de resultados con los datos en la URL
-            window.location.href = `result.html?boatName=${encodeURIComponent(boatName)}&initialPosition=${encodeURIComponent(initialPosition)}&initialDateTime=${encodeURIComponent(initialDateTime)}`;
+            // Guardar en localStorage
+            localStorage.setItem('boatName', boatName);
+            localStorage.setItem('initialPosition', initialPosition);
+            localStorage.setItem('initialDateTime', initialDateTime);
+
+            // Redirigir a la página de resultados
+            window.location.href = `result.html`;
         }
     </script>
 </body>
