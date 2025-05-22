@@ -25,51 +25,88 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 // Endpoint para manejar el envío del formulario
 app.post('/submit', async (req, res) => {
-    const formData = req.body;
-    console.log(formData);
-
-    // Convertir initial_datetime al formato compatible con PostgreSQL
-    const initialDatetime = moment(formData.initial_datetime, 'DD/MM/YYYY, HH:mm:ss').format('YYYY-MM-DD HH:mm:ss');
-
-    // Insertar los datos en la base de datos
-    const query = `
-        INSERT INTO opp_forms (
-            boat_name, initial_position, initial_datetime, fishing, no_fishing, tuna, position, timestamp, specie, kg_catch, no_fishing_reason, caliber, kg_tuna, interaccion
-        ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14)
-    `;
-    const values = [
-        formData.boat_name,
-        formData.initial_position,
-        initialDatetime,
-        formData.fishing, // Fishing
-        formData.no_fishing, // NoFishing
-        formData.tuna, // Tuna
-        formData.position || null, // Position
-        formData.timestamp || null, // Timestamp
-        formData.specie, // Specie
-        formData.kg_catch || null, // KG
-        formData.no_fishing_reason, // NoFishingReason
-        formData.caliber, // Caliber
-        formData.kg_tuna || null, // NumIndividuals
-        formData.interaccion, // Interaccion
-    ];
-
+    console.log('POST /submit recibido');
+    console.log('Datos recibidos:', JSON.stringify(req.body, null, 2));
+    const client = await pool.connect();
     try {
-        await pool.query(query, values);
-        console.log('Datos insertados correctamente en la base de datos.');
-        res.redirect(`/result.html?boatName=${encodeURIComponent(formData.boat_name)}&initialPosition=${encodeURIComponent(formData.initial_position)}&initialDateTime=${encodeURIComponent(formData.initial_datetime)}`); // Redirigir a la página de resultado con los datos
-    } catch (error) {
-        console.error('Error al insertar datos en la base de datos:', error);
+        await client.query('BEGIN');
+        // 1. Insertar en opp_forms
+        const formResult = await client.query(
+            `INSERT INTO opp_forms (boat_name, initial_position, initial_datetime, position, timestamp)
+             VALUES ($1, $2, $3, $4, $5) RETURNING id`,
+            [
+                req.body.boat_name,
+                req.body.initial_position,
+                req.body.initial_datetime,
+                req.body.position,
+                req.body.timestamp
+            ]
+        );
+        const formId = formResult.rows[0].id;
 
-        // Redirigir a result.html con los datos y un mensaje de error
-        const queryParams = new URLSearchParams({
-            boatName: formData.boat_name,
-            initialPosition: formData.initial_position,
-            initialDateTime: formData.initial_datetime,
-            error: 'db_connection_failed'
-        }).toString();
+        // 2. Insertar especies en pescas si corresponde
+        if (req.body.fishing === "true" && req.body.species) {
+            let speciesArray = req.body.species;
+            if (!Array.isArray(speciesArray)) {
+                speciesArray = Object.values(speciesArray);
+            }
+            for (const s of speciesArray) {
+                await client.query(
+                    `INSERT INTO pescas (form_id, specie, kg, caliber)
+                    VALUES ($1, $2, $3, $4)`,
+                    [
+                        formId,
+                        s.name,
+                        s.kg === "" ? null : s.kg, // <-- Aquí conviertes "" a null
+                        s.caliber
+                    ]
+                );
+            }
+        }
 
-        res.redirect(`/result.html?${queryParams}`);    }
+        // 3. Insertar motivos en no_pesca si corresponde
+        if (req.body.no_fishing_active === "true" && req.body.no_fishing) {
+            let noFishingArray = req.body.no_fishing;
+            if (!Array.isArray(noFishingArray)) {
+                noFishingArray = Object.values(noFishingArray);
+            }
+            for (const n of noFishingArray) {
+                await client.query(
+                    `INSERT INTO no_pesca (form_id, reason)
+                     VALUES ($1, $2)`,
+                    [formId, n.reason]
+                );
+            }
+        }
+
+        // 4. Insertar interacciones en interaccio_tonyines si corresponde
+        if (req.body.tuna_active === "true" && req.body.tuna) {
+            let tunaArray = req.body.tuna;
+            if (!Array.isArray(tunaArray)) {
+                tunaArray = Object.values(tunaArray);
+            }
+            for (const t of tunaArray) {
+                await client.query(
+                    `INSERT INTO interaccio_tonyines (form_id, kg, interaccion)
+                    VALUES ($1, $2, $3)`,
+                    [
+                        formId,
+                        t.kg === "" ? null : t.kg, // <-- Aquí conviertes "" a null
+                        t.interaccion
+                    ]
+                );
+            }
+        }
+
+        await client.query('COMMIT');
+        res.redirect('/result.html');
+    } catch (err) {
+        await client.query('ROLLBACK');
+        console.error(err);
+        res.status(500).send('Error al guardar');
+    } finally {
+        client.release();
+    }
 });
 
 app.listen(port, () => {

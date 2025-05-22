@@ -59,71 +59,22 @@
             <!-- Sección PESCA -->
             <button type="button" class="btn-toggle" onclick="toggleSection('collapsibleSection1')">PESCA</button>
             <div id="collapsibleSection1" class="collapsible-section">
-                <div class="form-group">
-                    <label for="dropdown1">Especie:</label>
-                    <select id="dropdown1" name="specie">
-                        <option value="null">----</option>
-                        <option value="sardina">Sardina</option>
-                        <option value="seito">Seitó</option>
-                        <option value="alatxa">Alatxa</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label for="kg_catch">Kg:</label>
-                    <input type="number" id="kg_catch" name="kg_catch" min="0">
-                </div>
-                <div class="form-group">
-                    <label for="caliber1">Calibre:</label>
-                    <select id="dropdown2" name="caliber">
-                        <option value="null">----</option>
-                        <option value="gran">1 - Gran</option>
-                        <option value="mitja">2 - Mitjà</option>
-                        <option value="petit">3 - Petit</option>
-                    </select>
-                </div>
+                <div id="speciesContainer"></div>
+                <button type="button" class="btn" onclick="addSpeciesRow()">Afegir espècie</button>
             </div>
         
             <!-- Sección NO PESCA -->
             <button type="button" class="btn-toggle" onclick="toggleSection('collapsibleSection2')">NO PESCA</button>
             <div id="collapsibleSection2" class="collapsible-section">
-                <div class="form-group">
-                    <label for="dropdown2">Motiu de no pesca:</label>
-                    <select id="dropdown2" name="no_fishing_reason">
-                        <option value="null">----</option>
-                        <option value="peix_petit">Peix petit</option>
-                        <option value="no_interes">No té interès econòmic</option>
-                        <option value="prohibicio">Prohibició de pesca</option>
-                        <option value="no_concentrat">Peix no concentrat</option>
-                        <option value="solta">Solta</option>
-                        <option value="altres">Altres</option>
-                    </select>
-                </div>
+                <div id="noFishingContainer"></div>
+                <button type="button" class="btn" onclick="addNoFishingRow()">Afegir motiu</button>
             </div>
 
             <!-- Sección INTERACCIÓ TONYINES -->
             <button type="button" class="btn-toggle" onclick="toggleSection('collapsibleSection3')">INTERACCIÓ TONYINES</button>
             <div id="collapsibleSection3" class="collapsible-section">
-                <div class="form-group">
-                    <label for="kg_tuna">Kg:</label>
-                    <select id="kg_tuna" name="kg_tuna">
-                        <option value="" disabled selected>Selecciona kg</option>
-                        <option value="10">10</option>
-                        <option value="50">50</option>
-                        <option value="100">100</option>
-                        <option value="200">200</option>
-                        <option value="500">500</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label for="interaction">Interacció:</label>
-                    <select id="interaction" name="interaccion">
-                        <option value="null">----</option>
-                        <option value="cap">Cap</option>
-                        <option value="impedeix maniobra">Impedeix la maniobra de pesca</option>
-                        <option value="no permet concentració">No permet que el peix es concentri</option>
-                        <option value="destroces">Destroces en l'art</option>
-                    </select>
-                </div>
+                <div id="tunaContainer"></div>
+                <button type="button" class="btn" onclick="addTunaRow()">Afegir interacció</button>
             </div>
         
             <button type="submit" class="btn-submit">Envia</button>
@@ -145,6 +96,11 @@
             document.getElementById('hiddenBoatName').value = boatName || '';
             document.getElementById('hiddenInitialPosition').value = initialPosition || '';
             document.getElementById('hiddenInitialDateTime').value = initialDateTime || '';
+
+            // Añadir una fila por defecto en cada sección
+            addSpeciesRow();
+            addNoFishingRow();
+            addTunaRow();
         });
 
         // Funciones para obtener ubicación y fecha/hora
@@ -193,10 +149,129 @@
                     input.selectedIndex = 0;
                 }
             });
+            // Eliminar filas dinámicas
+            if (section.id === 'collapsibleSection1') {
+                document.getElementById('speciesContainer').innerHTML = '';
+                speciesCount = 0;
+                addSpeciesRow();
+            }
+            if (section.id === 'collapsibleSection2') {
+                document.getElementById('noFishingContainer').innerHTML = '';
+                noFishingCount = 0;
+                addNoFishingRow();
+            }
+            if (section.id === 'collapsibleSection3') {
+                document.getElementById('tunaContainer').innerHTML = '';
+                tunaCount = 0;
+                addTunaRow();
+            }
         }
-        
+
+        // Añadir especie dinámicamente (PESCA)
+        let speciesCount = 0;
+        function addSpeciesRow() {
+            speciesCount++;
+            const container = document.getElementById('speciesContainer');
+            const div = document.createElement('div');
+            div.className = 'species-row';
+            div.innerHTML = `
+                <div class="form-group">
+                    <label>Especie:</label>
+                    <select name="species[${speciesCount}][name]">
+                        <option value="">----</option>
+                        <option value="sardina">Sardina</option>
+                        <option value="seito">Seitó</option>
+                        <option value="alatxa">Alatxa</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Kg:</label>
+                    <input type="number" name="species[${speciesCount}][kg]" min="0">
+                </div>
+                <div class="form-group">
+                    <label>Calibre:</label>
+                    <select name="species[${speciesCount}][caliber]">
+                        <option value="">----</option>
+                        <option value="gran">1 - Gran</option>
+                        <option value="mitja">2 - Mitjà</option>
+                        <option value="petit">3 - Petit</option>
+                    </select>
+                </div>
+                <button type="button" onclick="this.parentElement.remove()">Eliminar</button>
+                <hr>
+            `;
+            container.appendChild(div);
+        }
+
+        // Añadir motivo dinámicamente (NO PESCA)
+        let noFishingCount = 0;
+        function addNoFishingRow() {
+            noFishingCount++;
+            const container = document.getElementById('noFishingContainer');
+            const div = document.createElement('div');
+            div.className = 'no-fishing-row';
+            div.innerHTML = `
+                <div class="form-group">
+                    <label>Motiu de no pesca:</label>
+                    <select name="no_fishing[${noFishingCount}][reason]">
+                        <option value="">----</option>
+                        <option value="peix_petit">Peix petit</option>
+                        <option value="no_interes">No té interès econòmic</option>
+                        <option value="prohibicio">Prohibició de pesca</option>
+                        <option value="no_concentrat">Peix no concentrat</option>
+                        <option value="solta">Solta</option>
+                        <option value="altres">Altres</option>
+                    </select>
+                </div>
+                <button type="button" onclick="this.parentElement.remove()">Eliminar</button>
+                <hr>
+            `;
+            container.appendChild(div);
+        }
+
+        // Añadir interacción tonyina dinámicamente (INTERACCIÓ TONYINES)
+        let tunaCount = 0;
+        function addTunaRow() {
+            tunaCount++;
+            const container = document.getElementById('tunaContainer');
+            const div = document.createElement('div');
+            div.className = 'tuna-row';
+            div.innerHTML = `
+                <div class="form-group">
+                    <label>Kg:</label>
+                    <select name="tuna[${tunaCount}][kg]">
+                        <option value="">Selecciona kg</option>
+                        <option value="10">10</option>
+                        <option value="50">50</option>
+                        <option value="100">100</option>
+                        <option value="200">200</option>
+                        <option value="500">500</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Interacció:</label>
+                    <select name="tuna[${tunaCount}][interaccion]">
+                        <option value="">----</option>
+                        <option value="cap">Cap</option>
+                        <option value="impedeix maniobra">Impedeix la maniobra de pesca</option>
+                        <option value="no permet concentració">No permet que el peix es concentri</option>
+                        <option value="destroces">Destroces en l'art</option>
+                    </select>
+                </div>
+                <button type="button" onclick="this.parentElement.remove()">Eliminar</button>
+                <hr>
+            `;
+            container.appendChild(div);
+        }
+
         // Manejar el envío del formulario y crear campos ocultos para los valores de fishing, no_fishing y tuna
         document.getElementById('dataForm').addEventListener('submit', function(event) {
+            document.querySelectorAll('.collapsible-section').forEach(section => {
+                if (window.getComputedStyle(section).display === 'none') {
+                    section.querySelectorAll('input, select').forEach(el => el.remove());
+                }
+            });
+
             const collapsibleSections = document.querySelectorAll('.collapsible-section');
             let isAnySectionOpen = false;
             let fishing = false;
@@ -245,12 +320,12 @@
 
             const noFishingInput = document.createElement('input');
             noFishingInput.type = 'hidden';
-            noFishingInput.name = 'no_fishing';
+            noFishingInput.name = 'no_fishing_active';
             noFishingInput.value = noFishing;
 
             const tunaInput = document.createElement('input');
             tunaInput.type = 'hidden';
-            tunaInput.name = 'tuna';
+            tunaInput.name = 'tuna_active';
             tunaInput.value = tuna;
 
             this.appendChild(fishingInput);
