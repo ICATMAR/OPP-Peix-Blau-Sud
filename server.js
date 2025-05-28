@@ -20,7 +20,8 @@ const moment = require('moment');
 // Configuracion para deployment
 const pool = new Pool({
     user: 'sadmin', // Cambia esto por tu usuario de PostgreSQL
-    host: '172.25.0.3',
+    host: 'opp_peix_blau_sud-psql-1',
+    // host: '172.25.0.3',
     database: 'OPP_Form', // Cambia esto por el nombre de tu base de datos
     password: '4rb0lv3rDE', // Cambia esto por tu contraseña
     port: 5432,
