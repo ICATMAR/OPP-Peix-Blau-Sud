@@ -48,7 +48,7 @@ app.post('/submit', async (req, res) => {
             [
                 req.body.boat_name,
                 req.body.initial_position,
-                req.body.initial_datetime,
+                moment(req.body.initial_datetime, "D/M/YYYY, HH:mm:ss").format("YYYY-MM-DD HH:mm:ss"),
                 req.body.position,
                 req.body.timestamp
             ]
